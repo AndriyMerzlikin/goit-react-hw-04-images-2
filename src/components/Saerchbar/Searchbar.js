@@ -6,11 +6,16 @@ import {
   SearchFormInput,
 } from './Searchbar.styled';
 
-export const Searchbar = ({ qqq }) => {
+export const Searchbar = ({ addGalery }) => {
   return (
     <SearchbarContainer>
       <SearchForm>
-        <SearchFormButton type="submit" onSubmit={qqq}>
+        <SearchFormButton
+          type="submit"
+          onSubmit={async values => {
+            await addGalery(values.queryName);
+          }}
+        >
           <AiOutlineSearch size="2em" />
         </SearchFormButton>
 

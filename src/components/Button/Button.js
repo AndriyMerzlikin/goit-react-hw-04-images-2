@@ -1,6 +1,6 @@
-import { LoaderButton, LoaderContainer } from './Loader.styled';
+import { LoaderButton, LoaderContainer } from './Button.styled';
 
-export const Loader = () => {
+export const LoadMoreButton = () => {
   return (
     <LoaderContainer>
       <LoaderButton>Load more</LoaderButton>

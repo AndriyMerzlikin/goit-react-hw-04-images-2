@@ -1,6 +1,6 @@
 import { Searchbar } from './Saerchbar/Searchbar';
 import { Component } from 'react';
-import { Loader } from './Loader/Loader';
+import { LoadMoreButton } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { fetchImages } from './api';
 
@@ -10,11 +10,6 @@ export class App extends Component {
     query: '',
     page: 1,
   };
-
-  componentDidMount() {
-    // this.fetchUpdatedImages();
-    // console.log(this.state.images);
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -30,18 +25,18 @@ export class App extends Component {
     const { page, query } = this.state;
 
     try {
-      const recievedImages = await fetchImages(query, page);
-      console.log(recievedImages);
+      const receivedImages = await fetchImages(query, page);
+      console.log(receivedImages);
 
       this.setState(prevState => ({
-        images: [...prevState.images, ...recievedImages.hits],
+        images: [...prevState.images, ...receivedImages.hits],
       }));
     } catch (error) {
       console.error(error);
     }
   };
 
-  handleSubmit = newQuery => {
+  onSearch = async newQuery => {
     this.setState({
       query: newQuery,
       page: 1,
@@ -50,20 +45,18 @@ export class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.setState(prevState => {
-      return {
-        page: prevState.page + 1,
-      };
-    });
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   render() {
     const { images, query, page } = this.state;
     return (
       <div>
-        <Searchbar qqq={this.handleSubmit} />
-        <ImageGallery />
-        <Loader />
+        <Searchbar addGalery={this.onSearch} />
+        <ImageGallery imagesRender={images} />
+        <LoadMoreButton />
       </div>
     );
   }
