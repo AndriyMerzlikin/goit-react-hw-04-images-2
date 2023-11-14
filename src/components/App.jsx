@@ -1,4 +1,4 @@
-import { Searchbar } from 'Saerchbar/Searchbar';
+import { Searchbar } from './Saerchbar/Searchbar';
 import { Component } from 'react';
 import { Loader } from './Loader/Loader';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -23,40 +23,39 @@ export class App extends Component {
     ) {
       console.log('hello');
     }
-    //   this.fetchUpdatedImages();
-    // }
+    this.fetchUpdatedImages();
   }
 
-  // fetchUpdatedImages = async () => {
-  //   const { page, query } = this.state;
+  fetchUpdatedImages = async () => {
+    const { page, query } = this.state;
 
-  //   try {
-  //     const recievedImages = await fetchImages(query, page);
-  //     console.log(recievedImages);
+    try {
+      const recievedImages = await fetchImages(query, page);
+      console.log(recievedImages);
 
-  //     this.setState(prevState => ({
-  //       images: [...prevState.images, ...recievedImages.hits],
-  //     }));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+      this.setState(prevState => ({
+        images: [...prevState.images, ...recievedImages.hits],
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  // handleSubmit = newQuery => {
-  //   this.state({
-  //     query: newQuery,
-  //     page: 1,
-  //     images: [],
-  //   });
-  // };
+  handleSubmit = newQuery => {
+    this.setState({
+      query: newQuery,
+      page: 1,
+      images: [],
+    });
+  };
 
-  // handleLoadMore = () => {
-  //   this.setState(prevState => {
-  //     return {
-  //       page: prevState.page + 1,
-  //     };
-  //   });
-  // };
+  handleLoadMore = () => {
+    this.setState(prevState => {
+      return {
+        page: prevState.page + 1,
+      };
+    });
+  };
 
   render() {
     const { images, query, page } = this.state;
