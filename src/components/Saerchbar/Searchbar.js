@@ -1,4 +1,5 @@
 import { AiOutlineSearch } from 'react-icons/ai';
+import { Formik, Field, Form } from 'formik';
 import {
   SearchForm,
   SearchFormButton,
@@ -9,13 +10,28 @@ import {
 export const Searchbar = ({ addGalery }) => {
   return (
     <SearchbarContainer>
-      <SearchForm>
-        <SearchFormButton
-          type="submit"
-          onSubmit={async values => {
-            await addGalery(values.queryName);
-          }}
-        >
+      <Formik
+        initialValues={{
+          queryName: '',
+        }}
+        onSubmit={async values => {
+          await addGalery(values.queryName);
+        }}
+      >
+        <Form>
+          <label htmlFor="queryName"></label>
+          <Field id="queryName" name="queryName" placeholder="Search" />
+
+          <button type="submit">Search</button>
+        </Form>
+      </Formik>
+
+      {/* <SearchForm
+        onSubmit={async values => {
+          await addGalery(values.queryName);
+        }}
+      >
+        <SearchFormButton type="submit">
           <AiOutlineSearch size="2em" />
         </SearchFormButton>
 
@@ -25,7 +41,7 @@ export const Searchbar = ({ addGalery }) => {
           //   autofocus
           placeholder="Search images and photos"
         />
-      </SearchForm>
+      </SearchForm> */}
     </SearchbarContainer>
   );
 };

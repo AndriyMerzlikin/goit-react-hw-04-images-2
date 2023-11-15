@@ -36,7 +36,9 @@ export class App extends Component {
     }
   };
 
-  onSearch = async newQuery => {
+  onSearch = async event => {
+    // event.preventDefault();
+    const newQuery = event.target.value;
     this.setState({
       query: newQuery,
       page: 1,
