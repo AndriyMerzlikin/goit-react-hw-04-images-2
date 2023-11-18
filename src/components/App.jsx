@@ -60,7 +60,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, query, page, isLoading, showBtn } = this.state;
+    const { images, isLoading, showBtn } = this.state;
     return (
       <div>
         <Searchbar addGalery={this.onSearch} />
