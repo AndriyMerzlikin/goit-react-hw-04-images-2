@@ -2,13 +2,17 @@ import { Searchbar } from './Saerchbar/Searchbar';
 import { Component } from 'react';
 import { LoadMoreButton } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import toast, { Toaster } from 'react-hot-toast';
 import { fetchImages } from './api';
+import { MagnifyingGlass } from 'react-loader-spinner';
 
 export class App extends Component {
   state = {
     images: [],
+    isLoading: false,
     query: '',
     page: 1,
+    showBtn: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -16,34 +20,39 @@ export class App extends Component {
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
-      console.log('hello');
+      this.fetchUpdatedImages();
     }
-    this.fetchUpdatedImages();
   }
 
   fetchUpdatedImages = async () => {
     const { page, query } = this.state;
 
     try {
+      this.setState({ isLoading: true });
       const receivedImages = await fetchImages(query, page);
-      console.log(receivedImages);
 
       this.setState(prevState => ({
         images: [...prevState.images, ...receivedImages.hits],
+        showBtn: this.state.page < Math.ceil(receivedImages.totalHits / 12),
+        isLoading: false,
       }));
     } catch (error) {
-      console.error(error);
+      toast.error('There is an error fetching images');
+      this.setState({ isLoading: false });
     }
   };
 
-  onSearch = async event => {
-    // event.preventDefault();
-    const newQuery = event.target.value;
-    this.setState({
-      query: newQuery,
-      page: 1,
-      images: [],
-    });
+  onSearch = async value => {
+    if (value === '') {
+      toast.error('Please enter something to search');
+    } else {
+      this.setState({
+        isLoading: true,
+        query: value,
+        page: 1,
+        images: [],
+      });
+    }
   };
 
   handleLoadMore = () => {
@@ -53,12 +62,25 @@ export class App extends Component {
   };
 
   render() {
-    const { images, query, page } = this.state;
+    const { images, query, page, isLoading, showBtn } = this.state;
     return (
       <div>
         <Searchbar addGalery={this.onSearch} />
+        {isLoading && (
+          <MagnifyingGlass
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="MagnifyingGlass-loading"
+            wrapperStyle={{}}
+            wrapperClass="MagnifyingGlass-wrapper"
+            glassColor="#c0efff"
+            color="#e15b64"
+          />
+        )}
         <ImageGallery imagesRender={images} />
-        <LoadMoreButton />
+        {showBtn && <LoadMoreButton addPage={this.handleLoadMore} />}
+        <Toaster />
       </div>
     );
   }

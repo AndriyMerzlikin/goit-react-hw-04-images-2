@@ -1,9 +1,16 @@
 import { Component } from 'react';
 import { ImageGalleryItemPicture } from './ImageGalleryItem.styled';
+import { ModalWindow } from '../ModalWindow/ModalWindow';
 
 export class GalleryImage extends Component {
   state = {
     isModalOpen: false,
+  };
+
+  toggleModal = () => {
+    this.setState(prevState => ({
+      isModalOpen: !prevState.isModalOpen,
+    }));
   };
 
   render() {
@@ -16,8 +23,15 @@ export class GalleryImage extends Component {
           src={webformatURL}
           alt={tags}
           load="lazy"
-          onClick={'future modal window'}
+          onClick={this.toggleModal}
         />
+
+        <ModalWindow
+          isOpen={isModalOpen}
+          onRequestClose={this.toggleModal}
+          largeImageURL={largeImageURL}
+          tags={tags}
+        ></ModalWindow>
       </div>
     );
   }

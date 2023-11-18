@@ -45,6 +45,7 @@
 //     </SearchbarContainer>
 //   );
 // };
+
 import { AiOutlineSearch } from 'react-icons/ai';
 import { Formik, Field, Form } from 'formik';
 import {
@@ -63,7 +64,6 @@ export const Searchbar = ({ addGalery }) => {
         }}
         onSubmit={async (values, { setFieldValue }) => {
           await addGalery(values.queryName);
-          // Скидання значення інпута після відправлення форми
           setFieldValue('queryName', '');
         }}
       >

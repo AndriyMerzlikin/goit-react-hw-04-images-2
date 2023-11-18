@@ -1,9 +1,9 @@
 import { LoaderButton, LoaderContainer } from './Button.styled';
 
-export const LoadMoreButton = () => {
+export const LoadMoreButton = ({ addPage }) => {
   return (
     <LoaderContainer>
-      <LoaderButton>Load more</LoaderButton>
+      <LoaderButton onClick={addPage}>Load more</LoaderButton>
     </LoaderContainer>
   );
 };
