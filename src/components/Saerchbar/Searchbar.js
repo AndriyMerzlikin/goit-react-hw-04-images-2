@@ -46,14 +46,8 @@
 //   );
 // };
 
-import { AiOutlineSearch } from 'react-icons/ai';
 import { Formik, Field, Form } from 'formik';
-import {
-  SearchForm,
-  SearchFormButton,
-  SearchbarContainer,
-  SearchFormInput,
-} from './Searchbar.styled';
+import { SearchbarContainer } from './Searchbar.styled';
 
 export const Searchbar = ({ addGalery }) => {
   return (
