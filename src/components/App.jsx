@@ -27,6 +27,7 @@ export class App extends Component {
   fetchUpdatedImages = async () => {
     try {
       this.setState({ isLoading: true });
+      const { query, page } = this.state;
       const receivedImages = await fetchImages(query, page);
 
       this.setState(prevState => ({
