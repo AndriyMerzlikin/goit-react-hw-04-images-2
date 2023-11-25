@@ -1,87 +1,70 @@
 import { Searchbar } from './Saerchbar/Searchbar';
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { LoadMoreButton } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import toast, { Toaster } from 'react-hot-toast';
 import { fetchImages } from './api';
 import { MagnifyingGlass } from 'react-loader-spinner';
 
-export class App extends Component {
-  state = {
-    images: [],
-    isLoading: false,
-    query: '',
-    page: 1,
-    showBtn: false,
-  };
+export const App = () => {
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [showBtn, setShowBtn] = useState(false);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.query !== this.state.query ||
-      prevState.page !== this.state.page
-    ) {
-      console.log('hello hello');
-      this.fetchUpdatedImages();
-    }
-  }
+  useEffect(() => {
+    if (query === '') return;
+    const fetchUpdatedImages = async () => {
+      try {
+        setIsLoading(true);
+        const searchedImages = await fetchImages(query, page);
 
-  fetchUpdatedImages = async () => {
-    try {
-      this.setState({ isLoading: true });
-      const { query, page } = this.state;
-      const receivedImages = await fetchImages(query, page);
+        setImages(prevImages => [...prevImages, ...searchedImages.hits]);
+        setShowBtn(page < Math.ceil(searchedImages.totalHits / 12));
+        setIsLoading(false);
+      } catch (error) {
+        toast.error('There is an error fetching images');
+        setIsLoading(false);
+      }
+    };
 
-      this.setState(prevState => ({
-        images: [...prevState.images, ...receivedImages.hits],
-        showBtn: this.state.page < Math.ceil(receivedImages.totalHits / 12),
-        isLoading: false,
-      }));
-    } catch (error) {
-      toast.error('There is an error fetching images');
-      this.setState({ isLoading: false });
-    }
-  };
+    fetchUpdatedImages();
+  }, [query, page]);
 
-  onSearch = async value => {
+  const onSearch = async value => {
     if (value === '') {
       toast.error('Please enter something to search');
     } else {
-      this.setState({
-        isLoading: true,
-        query: value,
-        page: 1,
-        images: [],
-      });
+      setIsLoading(true);
+      setQuery(value);
+      setPage(1);
+      setImages([]);
     }
   };
 
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  render() {
-    const { images, isLoading, showBtn } = this.state;
-    return (
-      <div>
-        <Searchbar addGalery={this.onSearch} />
-        {isLoading && (
-          <MagnifyingGlass
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="MagnifyingGlass-loading"
-            wrapperStyle={{}}
-            wrapperClass="MagnifyingGlass-wrapper"
-            glassColor="#c0efff"
-            color="#e15b64"
-          />
-        )}
-        <ImageGallery imagesRender={images} />
-        {showBtn && <LoadMoreButton addPage={this.handleLoadMore} />}
-        <Toaster />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Searchbar addGalery={onSearch} />
+      {isLoading && (
+        <MagnifyingGlass
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="MagnifyingGlass-loading"
+          wrapperStyle={{}}
+          wrapperClass="MagnifyingGlass-wrapper"
+          glassColor="#c0efff"
+          color="#e15b64"
+        />
+      )}
+      <ImageGallery imagesRender={images} />
+      {showBtn && <LoadMoreButton addPage={handleLoadMore} />}
+      <Toaster />
+    </div>
+  );
+};
