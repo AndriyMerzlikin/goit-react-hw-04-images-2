@@ -20,6 +20,7 @@ export class App extends Component {
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
+      console.log('hello');
       this.fetchUpdatedImages();
     }
   }
