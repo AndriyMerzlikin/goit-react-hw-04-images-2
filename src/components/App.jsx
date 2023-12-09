@@ -18,6 +18,7 @@ export const App = () => {
     const fetchUpdatedImages = async () => {
       try {
         setIsLoading(true);
+        console.log('hello');
         const searchedImages = await fetchImages(query, page);
 
         setImages(prevImages => [...prevImages, ...searchedImages.hits]);
